@@ -43,3 +43,4 @@ for page in range(1,100):
     # 6. Определение случайного фильма
 print(random.choice(all_pages_films))
 print(all_pages_films)
+
