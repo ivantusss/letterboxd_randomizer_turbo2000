@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
@@ -13,3 +13,12 @@ async def root():
 async def root():
     print('got request on /main endpoint')
     return "second endpoint"
+
+@app.post('/webhook')
+async def telegramWebhook(request: Request):
+    update = await request.json()
+
+    # process update
+    print(update)
+
+    return {"ok": True}
