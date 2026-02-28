@@ -15,11 +15,11 @@ def getIsRandomizeCommand(text: str):
 
 @app.post('/webhook')
 async def telegramWebhook(request: Request):
-    req = await request.json()
-    print(req)
+    body = await request.json()
+    print(body)
 
     try:
-      text = req['message']['text']
+      text = body['message']['text']
     except Exception as err:
       print(err)
       return {'ok': 'True'}
