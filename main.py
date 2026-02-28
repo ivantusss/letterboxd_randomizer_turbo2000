@@ -19,7 +19,7 @@ async def telegramWebhook(request: Request):
     print(req)
 
     try:
-      text = req.message.text
+      text = req['message']['text']
     except Exception as err:
       print(err)
       return {'ok': 'True'}
