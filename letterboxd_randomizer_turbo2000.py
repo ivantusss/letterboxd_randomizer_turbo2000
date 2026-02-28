@@ -60,9 +60,9 @@ def main():
     while choice_num < len(random_films):
         print(random_films[choice_num])
         print('_____________________')
-        film_choice = input('Show next film? - ')
-        
-        if film_choice == 'yes' or 'Yes' or 'YES':
+        film_choice = input('Show next film? (yes/no) - ')
+
+        if film_choice.lower() == 'yes':
             choice_num += 1
         else: break
         
