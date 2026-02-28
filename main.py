@@ -18,7 +18,12 @@ async def telegramWebhook(request: Request):
     req = await request.json()
     print(req)
 
-    text = req.message.text
+    try:
+      text = req.message.text
+    except Exception as err:
+      print(err)
+      return {'ok': 'True'}
+
     print(text)
 
     isRandomizeCommand, username = getIsRandomizeCommand(text)
