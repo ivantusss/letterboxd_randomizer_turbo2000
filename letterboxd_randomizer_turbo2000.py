@@ -44,7 +44,7 @@ def main():
     for page in range(1,100):
         page_films = page_reading(username, page)
             
-        if page_films == (all_pages_films or []):
+        if page_films == []:
             print(all_pages_films)
             break
         else: all_pages_films += page_films
