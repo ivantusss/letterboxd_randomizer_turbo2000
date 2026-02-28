@@ -16,8 +16,10 @@ def getIsRandomizeCommand(text: str):
 @app.post('/webhook')
 async def telegramWebhook(request: Request):
     req = await request.json()
+    print(req)
 
     text = req.message.text
+    print(text)
 
     isRandomizeCommand, username = getIsRandomizeCommand(text)
     if (isRandomizeCommand):
