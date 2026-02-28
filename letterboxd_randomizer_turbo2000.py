@@ -17,6 +17,7 @@ def page_reading(username, page_number):
     # 1. Sending GET-request
     url = f'https://letterboxd.com/{username}/watchlist/page/{page_number}/'
     response = requests.get(url,headers=headers)
+    print(f'Making a request to get {username}\'s {page_number} wl page')
 
     # 2. Content parsing
     if response.status_code == 200:
