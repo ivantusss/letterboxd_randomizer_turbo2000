@@ -32,13 +32,10 @@ def page_reading(username, page_number):
 
     return function_page_films
 
-
-def main(): 
-    username = input('Enter Letterboxd username: ')
+def getWatchlist(username: str):
     print('Wait a little...')
     print('_____________________')
 
-        # 4. Collecting all films
     all_pages_films = []
         
     for page in range(1,100):
@@ -47,14 +44,15 @@ def main():
         if page_films == []:
             break
         else: all_pages_films += page_films
+    
+    return all_pages_films
 
-        # 5. Finding 'Thursday' movie because it is cool film
-    if 'Thursday (1998)' in all_pages_films:
+def chooseRandomFilm(watchlist: list):
+    if 'Thursday (1998)' in watchlist:
         print('Thursday (1998)\nThere is no more choice for you')
         return
         
-    # 6. Choosing random film
-    random_films = [random.choice(all_pages_films) for film in range(5)]
+    random_films = [random.choice(watchlist) for film in range(5)]
     choice_num = 0
     
     while choice_num < len(random_films):
@@ -68,5 +66,15 @@ def main():
         
     if choice_num == len(random_films):
         print('Try to finally select one of these films')
+
+
+def getUsername():
+    username = input('Enter Letterboxd username: ')
+    return username
+
+def main(): 
+    username = getUsername()
+    watchlist = getWatchlist(username)
+    chooseRandomFilm(watchlist)
 
 main()
