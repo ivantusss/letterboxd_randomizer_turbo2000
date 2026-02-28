@@ -2,23 +2,25 @@ from fastapi import FastAPI, Request
 
 app = FastAPI()
 
+def getIsRandomizeCommand(text: str):
+    s = text.split(' ')
+    if (len(s) != 2):
+        return False, None
 
+    command, username = s
+    if (command != '/random'):
+        return False, None
 
-# endpoint = url that takes some request and returns a response
-@app.get("/hello")
-async def root():
-    return "hello world"
-
-@app.get("/main")
-async def root():
-    print('got request on /main endpoint')
-    return "second endpoint"
+    return True, username
 
 @app.post('/webhook')
 async def telegramWebhook(request: Request):
-    update = await request.json()
+    req = await request.json()
 
-    # process update
-    print(update)
+    text = req.message.text
+
+    isRandomizeCommand, username = getIsRandomizeCommand(text)
+    if (isRandomizeCommand):
+      print('received get random film command for user ' + username)
 
     return {"ok": True}
