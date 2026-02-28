@@ -45,7 +45,6 @@ def main():
         page_films = page_reading(username, page)
             
         if page_films == []:
-            print(all_pages_films)
             break
         else: all_pages_films += page_films
 
