@@ -28,7 +28,7 @@ async def telegramWebhook(request: Request):
     body = await request.json()
     print(body)
 
-    if 'message' in body and 'text' in body['message']['text']:
+    if 'message' in body and 'text' in body['message']:
       text: str = body['message']['text']
       print(text)
 
