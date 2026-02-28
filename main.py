@@ -13,21 +13,26 @@ def getIsRandomizeCommand(text: str):
 
     return True, username
 
+def processRandomCommand(text: str):
+    s = text.split(' ')
+    if (len(s) != 2):
+      print('command has no username argument')
+      return
+    
+    _, username = s
+    print('received get random film command for user ' + username)
+
+# TODO: add secret prefix after webhook path
 @app.post('/webhook')
 async def telegramWebhook(request: Request):
     body = await request.json()
     print(body)
 
-    try:
-      text = body['message']['text']
-    except Exception as err:
-      print(err)
-      return {'ok': 'True'}
+    if 'message' in body and 'text' in body['message']['text']:
+      text: str = body['message']['text']
+      print(text)
 
-    print(text)
-
-    isRandomizeCommand, username = getIsRandomizeCommand(text)
-    if (isRandomizeCommand):
-      print('received get random film command for user ' + username)
+      if text.startswith('/random'):
+        processRandomCommand(text)
 
     return {"ok": True}
