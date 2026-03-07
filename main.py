@@ -62,7 +62,7 @@ def getWatchlist(username: str):
 def chooseRandomFilm(watchlist: list):
     if 'Thursday (1998)' in watchlist:
         return 'Thursday (1998)'
-        
+    
     random_film = random.choice(watchlist)
     return random_film
 
@@ -88,9 +88,11 @@ def processRandomCommand(text: str, chat_id: str):
         send_message(chat_id, 'There was an error, please try again later')
         return
 
-    random_film = chooseRandomFilm(watchlist)
-
-    send_message(chat_id, random_film)
+    if watchlist == []:
+        send_message(chat_id, 'Empty watchlist')
+    else:
+        random_film = chooseRandomFilm(watchlist)
+        send_message(chat_id, random_film)
 
 # TODO: add secret prefix after webhook path
 @app.post('/webhook')
