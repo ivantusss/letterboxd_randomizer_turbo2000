@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 import random
 from bs4 import BeautifulSoup
 
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 app = FastAPI()
@@ -25,9 +26,11 @@ def page_reading(username, page_number):
     print(f'Making a request to get {username}\'s {page_number} wl page')
 
     # 2. Content parsing
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
-    else: print("Ошибка при получении страницы")
+    if response.status_code != 200:
+        print('Error while getting letterbox wathchlist', url, response);
+        return True, None
+
+    soup = BeautifulSoup(response.text, 'html.parser')
     
     # 3. Data extraction
     data = [tag.get('data-item-name') for tag in soup.find_all('div')]
@@ -35,19 +38,23 @@ def page_reading(username, page_number):
         function_page_films = [film for film in data if not film == None] 
     else: function_page_films = []
 
-    return function_page_films
+    return False, function_page_films
 
 def getWatchlist(username: str):
     all_pages_films = []
     
     for page in range(1,100):
-        page_films = page_reading(username, page)
+        isError, page_films = page_reading(username, page)
+
+        if isError:
+            return True, None
             
         if page_films == []:
             break
-        else: all_pages_films += page_films
+        else: 
+            all_pages_films += page_films
     
-    return all_pages_films
+    return False, all_pages_films
 
 def chooseRandomFilm(watchlist: list):
     if 'Thursday (1998)' in watchlist:
@@ -68,7 +75,12 @@ def processRandomCommand(text: str, chat_id: str):
     
     _, username = s
     print('received get random film command for user ' + username)
-    watchlist = getWatchlist(username)
+    isError, watchlist = getWatchlist(username)
+
+    if isError:
+        send_message(chat_id, 'There was an error, please try again later')
+        return
+
     random_film = chooseRandomFilm(watchlist)
 
     send_message(chat_id, random_film)
