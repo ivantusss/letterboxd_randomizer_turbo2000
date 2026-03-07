@@ -25,10 +25,13 @@ def page_reading(username, page_number):
     response = requests.get(url,headers=headers)
     print(f'Making a request to get {username}\'s {page_number} wl page')
 
-    # 2. Content parsing
+    if response.status_code == 404:
+        print('Could not find the user', username);
+        return 'username_not_found', []
+
     if response.status_code != 200:
         print('Error while getting letterbox wathchlist', url, response);
-        return True, None
+        return 'error', []
 
     soup = BeautifulSoup(response.text, 'html.parser')
     
@@ -38,23 +41,23 @@ def page_reading(username, page_number):
         function_page_films = [film for film in data if not film == None] 
     else: function_page_films = []
 
-    return False, function_page_films
+    return None, function_page_films
 
 def getWatchlist(username: str):
     all_pages_films = []
     
     for page in range(1,100):
-        isError, page_films = page_reading(username, page)
+        error, page_films = page_reading(username, page)
 
-        if isError:
-            return True, None
+        if error:
+            return error, []
             
         if page_films == []:
             break
         else: 
             all_pages_films += page_films
     
-    return False, all_pages_films
+    return None, all_pages_films
 
 def chooseRandomFilm(watchlist: list):
     if 'Thursday (1998)' in watchlist:
@@ -73,11 +76,15 @@ def processRandomCommand(text: str, chat_id: str):
         send_message(chat_id, 'Usage: /random ${username}')
         return
     
-    _, username = s
+    username = s[1]
     print('received get random film command for user ' + username)
-    isError, watchlist = getWatchlist(username)
+    error, watchlist = getWatchlist(username)
 
-    if isError:
+    if error == 'username_not_found':
+        send_message(chat_id, 'This username doesn\'t exist')
+        return
+
+    if error:
         send_message(chat_id, 'There was an error, please try again later')
         return
 
