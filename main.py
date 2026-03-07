@@ -68,7 +68,9 @@ def chooseRandomFilm(watchlist: list):
 
 def send_message(chat_id, text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    requests.post(url, json={"chat_id": chat_id, "text": text})
+    res = requests.post(url, json={"chat_id": chat_id, "text": text})
+
+    print(f'res: {res.json()}')
 
 def processRandomCommand(text: str, chat_id: str):
     s = text.split(' ')
