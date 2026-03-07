@@ -70,8 +70,8 @@ def send_message(chat_id, text):
 def processRandomCommand(text: str, chat_id: str):
     s = text.split(' ')
     if (len(s) != 2):
-      print('command has no username argument')
-      return
+        send_message(chat_id, 'Usage: /random ${username}')
+        return
     
     _, username = s
     print('received get random film command for user ' + username)
