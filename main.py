@@ -68,12 +68,20 @@ def chooseRandomFilm(watchlist: list):
 
 def send_message(chat_id, text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    requests.post(url, json={"chat_id": chat_id, "text": text})
+    res = requests.post(url, json={"chat_id": chat_id, "text": text})
+
+    return res.json()['result']['message_id']
+
+def edit_message(message_id, chat_id, text):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/editMessageText"
+    requests.post(url, json={"chat_id": chat_id, message_id: message_id, "text": text})
 
 def processRandomCommand(text: str, chat_id: str):
+    message_id = send_message(chat_id, '🤔')
+
     s = text.split(' ')
     if (len(s) != 2):
-        send_message(chat_id, 'Usage: /random ${username}')
+        edit_message(message_id, chat_id, 'Usage: /random ${username}')
         return
     
     username = s[1]
@@ -81,18 +89,18 @@ def processRandomCommand(text: str, chat_id: str):
     error, watchlist = getWatchlist(username)
 
     if error == 'username_not_found':
-        send_message(chat_id, 'This username doesn\'t exist')
+        edit_message(send_message, chat_id, 'This username doesn\'t exist')
         return
 
     if error:
-        send_message(chat_id, 'There was an error, please try again later')
+        edit_message(send_message, chat_id, 'There was an error, please try again later')
         return
 
     if watchlist == []:
-        send_message(chat_id, 'Empty watchlist')
+        edit_message(send_message, chat_id, 'Empty watchlist')
     else:
         random_film = chooseRandomFilm(watchlist)
-        send_message(chat_id, random_film)
+        edit_message(message_id, chat_id, random_film)
 
 # TODO: add secret prefix after webhook path
 @app.post('/webhook')
