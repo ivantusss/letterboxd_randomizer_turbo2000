@@ -74,7 +74,7 @@ def send_message(chat_id, text):
 
 def edit_message(message_id, chat_id, text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/editMessageText"
-    requests.post(url, json={"chat_id": chat_id, message_id: message_id, "text": text})
+    requests.post(url, json={"chat_id": chat_id, "message_id": message_id, "text": text})
 
 def processRandomCommand(text: str, chat_id: str):
     message_id = send_message(chat_id, '🤔')
